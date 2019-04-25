@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class SQLDriver {
     public static final String dbAddr="localhost:3306";
@@ -24,7 +25,6 @@ public class SQLDriver {
     public List<List<String>> query(String query){
         try (Connection c = DriverManager.getConnection("jdbc:mysql://"+dbAddr +"/"+ dbName, username, password);
              Statement st=c.createStatement(); ResultSet rs= st.executeQuery(query)){
-
             List<List<String>> lls=new ArrayList<>();
             {
                 List<String> ls = new ArrayList<>();
@@ -43,6 +43,16 @@ public class SQLDriver {
                 lls.add(ls);
             }
             return lls;
+        }
+    }
+
+
+
+    @SneakyThrows
+    public int update(String query){
+        try (Connection c = DriverManager.getConnection("jdbc:mysql://"+dbAddr +"/"+ dbName, username, password);
+             Statement st=c.createStatement()){
+            return st.executeUpdate(query);
         }
     }
 }

@@ -7,6 +7,7 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.*;
+import com.vaadin.ui.renderers.ComponentRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,6 @@ import java.util.List;
  */
 @Theme("mytheme")
 public class MyUI extends UI {
-    SQLDriver sqlDriver=new SQLDriver();
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         final VerticalLayout layout = new VerticalLayout();
@@ -30,7 +30,7 @@ public class MyUI extends UI {
         TextField tf=new TextField();
 
         layout.addComponents(vc, tf, new Button("click",e->{
-            vc.render(sqlDriver.query(tf.getValue()));
+            vc.render(tf.getValue());
         }));
         
         setContent(layout);
@@ -44,7 +44,9 @@ public class MyUI extends UI {
 
 
 class ViewQuery extends VerticalLayout{
-    public void render(List<List<String>> lls){
+    private final SQLDriver sqlDriver=new SQLDriver();
+    public void render(String query){
+        List<List<String>> lls=sqlDriver.query(query);
         removeAllComponents();
         addComponent(new Grid<List<String>>(){{
             setSizeFull();
@@ -54,6 +56,11 @@ class ViewQuery extends VerticalLayout{
                 final int ii=i;
                 addColumn(ls->ls.get(ii)).setCaption(lls.get(0).get(ii));
             }
+
+            addColumn(ls-> new Button("удалить "+ls.get(0), e->{
+                sqlDriver.update("delete from Persons where NameNum = "+ls.get(0));
+                render(query);
+            }),new ComponentRenderer()).setCaption("удалить заголовок");
 
         }});
     }
