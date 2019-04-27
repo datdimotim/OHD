@@ -10,6 +10,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -27,7 +28,7 @@ public class MyUI extends UI {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         final VerticalLayout layout = new VerticalLayout();
         final SQLDriver sqlDriver=new SQLDriver();
-        final DateField dateField = new DateField();
+        final DateField dateField = new DateField(null,LocalDate.now());
 
         dateField.setVisible(false);
         Label infoLabel = new Label();
@@ -68,7 +69,7 @@ public class MyUI extends UI {
                 });
 
                 tablePerson.setStyleName(ValoTheme.BUTTON_TINY);
-                Button tableStudents = new Button("Students", (cl)->{
+                Button tableStudents = new Button("Студенты", (cl)->{
                     dateField.setVisible(false);
                     makeQuery.setVisible(false);
 
@@ -162,7 +163,7 @@ public class MyUI extends UI {
             }) ;
             tableMarks.setStyleName(ValoTheme.BUTTON_TINY);
 
-            addComponents(tablePerson,tableStudents,tableLectires,tableSubjects,tableMarks);
+            addComponents(tableStudents,tableLectires,tableSubjects,tableMarks);
         }};
 
         VerticalLayout queryLayout = new VerticalLayout(){{
@@ -266,12 +267,63 @@ public class MyUI extends UI {
             query10.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query10);
 
+            Button query11 = new Button("query11", cl->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
+                infoLabel.setValue("Преподаватели, которые не принимали экзамены");
+                vc.render("select Teachers.NameNum  from Teachers left join Marks on id=t_id where sub_id is null;");
+            });
+            query11.setStyleName(ValoTheme.BUTTON_TINY);
+            addComponents(query11);
+
+            Button query12 = new Button("query12", cl->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
+                infoLabel.setValue("Количество профессоров, которые принимали экзамены");
+                vc.render("select count(id) from (select distinct Teachers.id  from  Teachers inner join Marks on id=t_id where position = \"professor\") as ids;");
+            });
+            query12.setStyleName(ValoTheme.BUTTON_TINY);
+            addComponents(query12);
+
+
+            Button query13 = new Button("query13", cl->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
+                infoLabel.setValue("Список доцентов");
+                vc.render("select  Teachers.nameNum  from  Teachers where Teachers.position = \"docent\";");
+            });
+            query13.setStyleName(ValoTheme.BUTTON_TINY);
+            addComponents(query13);
+
+            Button query14 = new Button("query14", cl->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
+                infoLabel.setValue("Список студентов, у которых средний балл не меньше 4.5");
+                vc.render("select distinct Students.NameNum  from  Students inner join Marks on id=st_id group by (Students.id) having (avg(mark)>=4.5);");
+            });
+            query14.setStyleName(ValoTheme.BUTTON_TINY);
+            addComponents(query14);
+
+            Button query15 = new Button("query15", cl->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
+                infoLabel.setValue("Список студентов из Спб старше 21 года");
+                vc.render("select Students.NameNum from Students where Students.AgeNum > 21 and Students.City = \"Spb\";");
+            });
+            query15.setStyleName(ValoTheme.BUTTON_TINY);
+            addComponents(query15);
+
         }};
         layout.addComponent(dateField);
-        layout.addComponents(vc, tf, new Button("click",e->{
+        layout.addComponents(vc/*, new Button("click",e->{
             vc.render(tf.getValue());
-        }));
-
+        })*/);
+        //
         //layout.setWidth("1200px");
         horizontalLayout.setWidth("100%");
         layout.setWidth("100%");
