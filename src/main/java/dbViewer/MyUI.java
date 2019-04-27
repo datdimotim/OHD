@@ -27,17 +27,29 @@ public class MyUI extends UI {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         final VerticalLayout layout = new VerticalLayout();
         final SQLDriver sqlDriver=new SQLDriver();
-        ViewQuery vc=new ViewQuery();
+        final DateField dateField = new DateField();
 
+        dateField.setVisible(false);
+        Label infoLabel = new Label();
+        layout.addComponent(infoLabel);
+        ViewQuery vc=new ViewQuery();
+        final Button makeQuery = new Button("Запрос", c->{
+            vc.render("select distinct Students.nameNUm from  Students inner join Marks on Students.id=st_id where Marks.exam_date <= \""+dateField.getValue().toString()+"\";");
+        });
+        makeQuery.setVisible(false);
+        makeQuery.setStyleName(ValoTheme.BUTTON_TINY);
+        layout.addComponent(makeQuery);
 
 
         TextField tf=new TextField();
 
-        Label infoLabel = new Label();
-        layout.addComponent(infoLabel);
+
 
         VerticalLayout tablesLayout = new VerticalLayout(){{
+
                 Button tablePerson = new Button("Persons", (cl)->{
+                    dateField.setVisible(false);
+                    makeQuery.setVisible(false);
                     vc.renderFullTable("Persons", new Consumer<Void>() {
                         @Override
                         public void accept(Void aVoid) {
@@ -57,6 +69,9 @@ public class MyUI extends UI {
 
                 tablePerson.setStyleName(ValoTheme.BUTTON_TINY);
                 Button tableStudents = new Button("Students", (cl)->{
+                    dateField.setVisible(false);
+                    makeQuery.setVisible(false);
+
                     vc.renderFullTable("Students", new Consumer<Void>() {
                         @Override
                         public void accept(Void aVoid) {
@@ -79,6 +94,9 @@ public class MyUI extends UI {
                 tableStudents.setStyleName(ValoTheme.BUTTON_TINY);
 
             Button tableLectires = new Button("Преподаватели", (cl)->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
                 vc.renderFullTable("Teachers", new Consumer<Void>() {
                     @Override
                     public void accept(Void aVoid) {
@@ -101,6 +119,9 @@ public class MyUI extends UI {
             tableLectires.setStyleName(ValoTheme.BUTTON_TINY);
 
             Button tableSubjects = new Button("Предметы", (cl)->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
                 vc.renderFullTable("Subjects", new Consumer<Void>() {
                     @Override
                     public void accept(Void aVoid) {
@@ -124,6 +145,9 @@ public class MyUI extends UI {
 
 
             Button tableMarks = new Button("Успеваемость", (cl)->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
                 vc.renderFullTable("Marks", aVoid -> {
                     MarksInputWindow subWindowUI = new MarksInputWindow(w -> {
                         sqlDriver.update("insert into Marks values (" +
@@ -143,6 +167,9 @@ public class MyUI extends UI {
 
         VerticalLayout queryLayout = new VerticalLayout(){{
             Button query1 = new Button("query1", cl->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
                 infoLabel.setValue("Самый старший студент ФКТИ");
                 vc.render("select nameNum from Students where (ageNum = (select max(ageNum) from Students where Department=\"FKTI\"))");
             });
@@ -150,13 +177,19 @@ public class MyUI extends UI {
             addComponents(query1);
 
             Button query2 = new Button("query2", cl->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
                 infoLabel.setValue("Имена преподавателей, которые ставили 5 студентам");
-                vc.render("select Teachers.NameNum from Teachers inner join Marks on ID=T_ID where mark=5;");
+                vc.render("select distinct Teachers.NameNum from Teachers inner join Marks on ID=T_ID where mark=5;");
             });
             query2.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query2);
 
             Button query3 = new Button("query3", cl->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
                 infoLabel.setValue("Отличие среднего балла студента ФКТИ от среднего по всем факультетам");
                 vc.render("select avg(mark/(select avg(mark)  from Teachers inner join Marks on Teachers.ID=T_ID inner join Students on Students.id=st_id where department=\"FKTI\"))  from Teachers inner join Marks on Teachers.ID=T_ID inner join Students on Students.id=st_id;\n");
             });
@@ -164,23 +197,77 @@ public class MyUI extends UI {
             addComponents(query3);
 
             Button query4 = new Button("query4", cl->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
                 infoLabel.setValue("Средние баллы по факультетам");
-                vc.render("select department, avg(mark)  from Subjects inner join Marks on  ID=SUB_id inner join Students on Students.id=st_id group by(department);");
+                vc.render("select distinct department, avg(mark)  from Subjects inner join Marks on  ID=SUB_id inner join Students on Students.id=st_id group by(department);");
             });
             query4.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query4);
 
             Button query5 = new Button("query5", cl->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
                 infoLabel.setValue("Преподаватели, которые не поставили ни одной 5");
-                vc.render("select Teachers.NameNum  from Teachers inner join Marks on id=t_id where (t_id not  in  (select Teachers.id from Teachers inner join Marks on ID=T_ID where mark=5) );");
+                vc.render("select distinct Teachers.NameNum  from Teachers inner join Marks on id=t_id where (t_id not  in  (select Teachers.id from Teachers inner join Marks on ID=T_ID where mark=5) );");
             });
             query5.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query5);
 
+            Button query6 = new Button("query6", cl->{
+                dateField.setVisible(true);
+                makeQuery.setVisible(true);
 
+                infoLabel.setValue("Студенты, которые сдавали экзамен до указанной даты");
+            });
+            query6.setStyleName(ValoTheme.BUTTON_TINY);
+            addComponents(query6);
+
+
+            Button query7 = new Button("query7", cl->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
+                infoLabel.setValue("Средние баллы по городам");
+                vc.render("select distinct city, avg(mark)  from Subjects inner join Marks on  ID=SUB_id inner join Students on Students.id=st_id group by(city);");
+            });
+            query7.setStyleName(ValoTheme.BUTTON_TINY);
+            addComponents(query7);
+
+            Button query8 = new Button("query8", cl->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
+                infoLabel.setValue("Предметы, которые сдают на ФКТИ");
+                vc.render("select distinct Subjects.NameNum  from Subjects inner join Marks on id= st_id inner join Students on Students.id = st_id where Students.Department = \"FKTI\";");
+            });
+            query8.setStyleName(ValoTheme.BUTTON_TINY);
+            addComponents(query8);
+
+            Button query9 = new Button("query9", cl->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
+                infoLabel.setValue("Предмет с самой большой нагруженностью");
+                vc.render("select nameNum from Subjects where (nagr = (select max(nagr) from Subjects))");
+            });
+            query9.setStyleName(ValoTheme.BUTTON_TINY);
+            addComponents(query9);
+
+            Button query10 = new Button("query10", cl->{
+                dateField.setVisible(false);
+                makeQuery.setVisible(false);
+
+                infoLabel.setValue("Средний балл по студентам в порядке убывания");
+                vc.render("select Students.NameNum, avg(mark) from  Students inner join Marks on id=st_id group by (Students.Id) Order by avg(mark) DESC;");
+            });
+            query10.setStyleName(ValoTheme.BUTTON_TINY);
+            addComponents(query10);
 
         }};
-
+        layout.addComponent(dateField);
         layout.addComponents(vc, tf, new Button("click",e->{
             vc.render(tf.getValue());
         }));
