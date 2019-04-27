@@ -33,6 +33,8 @@ public class MyUI extends UI {
 
         TextField tf=new TextField();
 
+        Label infoLabel = new Label();
+        layout.addComponent(infoLabel);
 
         VerticalLayout tablesLayout = new VerticalLayout(){{
                 Button tablePerson = new Button("Persons", (cl)->{
@@ -131,7 +133,6 @@ public class MyUI extends UI {
                     });
                     UI.getCurrent().addWindow(subWindowUI);
                 }, ls -> {
-                    System.out.println("delete from "+ "Marks"+" where SUB_ID = "+ls.get(0) +" and ST_ID = "+ls.get(1));
                     sqlDriver.update("delete from "+ "Marks"+" where SUB_ID = "+ls.get(0) +" and ST_ID = "+ls.get(1));
                 });
             }) ;
@@ -142,17 +143,58 @@ public class MyUI extends UI {
 
         VerticalLayout queryLayout = new VerticalLayout(){{
             Button query1 = new Button("query1", cl->{
-                vc.render("select nameNum from Persons where (ageNum = (select max(ageNum) from Persons))");
+                infoLabel.setValue("Самый старший студент ФКТИ");
+                vc.render("select nameNum from Students where (ageNum = (select max(ageNum) from Students where Department=\"FKTI\"))");
             });
             query1.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query1);
-        }};
 
+            Button query2 = new Button("query2", cl->{
+                infoLabel.setValue("Имена преподавателей, которые ставили 5 студентам");
+                vc.render("select Teachers.NameNum from Teachers inner join Marks on ID=T_ID where mark=5;");
+            });
+            query2.setStyleName(ValoTheme.BUTTON_TINY);
+            addComponents(query2);
+
+            Button query3 = new Button("query3", cl->{
+                infoLabel.setValue("Отличие среднего балла студента ФКТИ от среднего по всем факультетам");
+                vc.render("select avg(mark/(select avg(mark)  from Teachers inner join Marks on Teachers.ID=T_ID inner join Students on Students.id=st_id where department=\"FKTI\"))  from Teachers inner join Marks on Teachers.ID=T_ID inner join Students on Students.id=st_id;\n");
+            });
+            query3.setStyleName(ValoTheme.BUTTON_TINY);
+            addComponents(query3);
+
+            Button query4 = new Button("query4", cl->{
+                infoLabel.setValue("Средние баллы по факультетам");
+                vc.render("select department, avg(mark)  from Subjects inner join Marks on  ID=SUB_id inner join Students on Students.id=st_id group by(department);");
+            });
+            query4.setStyleName(ValoTheme.BUTTON_TINY);
+            addComponents(query4);
+
+            Button query5 = new Button("query5", cl->{
+                infoLabel.setValue("Преподаватели, которые не поставили ни одной 5");
+                vc.render("select Teachers.NameNum  from Teachers inner join Marks on id=t_id where (t_id not  in  (select Teachers.id from Teachers inner join Marks on ID=T_ID where mark=5) );");
+            });
+            query5.setStyleName(ValoTheme.BUTTON_TINY);
+            addComponents(query5);
+
+
+
+        }};
 
         layout.addComponents(vc, tf, new Button("click",e->{
             vc.render(tf.getValue());
         }));
+
+        //layout.setWidth("1200px");
+        horizontalLayout.setWidth("100%");
+        layout.setWidth("100%");
+        tablesLayout.setWidth("100%");
+        queryLayout.setWidth("100%");
+
         horizontalLayout.addComponents(tablesLayout,queryLayout,layout);
+        horizontalLayout.setExpandRatio(layout,0.7f);
+        horizontalLayout.setExpandRatio(tablesLayout,0.15f);
+        horizontalLayout.setExpandRatio(queryLayout,0.15f);
 
         setContent(horizontalLayout);
     }

@@ -8,6 +8,7 @@ public class InputStudentWindow extends Window {
     private final VerticalLayout verticalLayout;
     private final TextField nameTextEdit;
     private final TextField departmentTextEdit;
+    private final TextField cityTextField;
     private final CNumber ageTextEdit;
     public int getAge(){
         return ageTextEdit.getIntNumber();
@@ -18,21 +19,23 @@ public class InputStudentWindow extends Window {
     public String getDepartment(){
         return departmentTextEdit.getValue();
     }
-
+    public String getCity(){return cityTextField.getValue();}
 
     InputStudentWindow(Consumer<InputStudentWindow> onOkListener){
-        super("add student");
+        super("Добавить студента");
         center();
         setClosable(true);
         setModal(true);
         verticalLayout = new VerticalLayout();
         setContent(verticalLayout);
         nameTextEdit = new TextField();
-        nameTextEdit.setCaption("Имя");
+        cityTextField = new TextField();
+        nameTextEdit.setCaption("ФИО");
         departmentTextEdit = new TextField();
         departmentTextEdit.setCaption("Факультет");
         ageTextEdit = new CNumber(1,0,400);
-        verticalLayout.addComponents(nameTextEdit, departmentTextEdit,new Label("Возраст"),ageTextEdit, new Button("ok",(cl)->{
+        cityTextField.setCaption("Город");
+        verticalLayout.addComponents(nameTextEdit, departmentTextEdit,new Label("Возраст"),ageTextEdit,cityTextField, new Button("ok",(cl)->{
             onOkListener.accept(this);
             close();
         }));
