@@ -43,6 +43,8 @@ public class SQLDriver {
                 lls.add(ls);
             }
             return lls;
+        }catch (SQLException e){
+            return new ArrayList<List<String>>(){{add(new ArrayList<>());}};
         }
     }
 
