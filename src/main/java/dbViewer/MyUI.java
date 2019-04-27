@@ -10,7 +10,6 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -64,7 +63,9 @@ public class MyUI extends UI {
                                 public void accept(InputStudentWindow w) {
                                     List<List<String>> lls=sqlDriver.query("select max(id) from Students");
                                     int i = Integer.parseInt(lls.get(1).get(0))+1;
-                                    sqlDriver.update("insert into Students values (" + i + ",\"" + w.getName() + "\"," + w.getAge() + ",\"" + w.getDepartment()+"\");");
+
+                                    sqlDriver.update("insert into Students values (" + i + ",\"" + w.getName() + "\","  +
+                                            "\"" + w.getDepartment()+"\"," + w.getAge()+  ",\"" + w.getCity()+"\"" + ");");
                                     vc.update();
                                 }
                             });
@@ -74,7 +75,69 @@ public class MyUI extends UI {
 
                 }) ;
                 tableStudents.setStyleName(ValoTheme.BUTTON_TINY);
-                addComponents(tablePerson,tableStudents);
+
+            Button tableLectires = new Button("Преподаватели", (cl)->{
+                vc.renderFullTable("Teachers", new Consumer<Void>() {
+                    @Override
+                    public void accept(Void aVoid) {
+                        LecturesInputWindow subWindowUI = new LecturesInputWindow(new Consumer<LecturesInputWindow>() {
+                            @Override
+                            public void accept(LecturesInputWindow w) {
+                                List<List<String>> lls=sqlDriver.query("select max(id) from Teachers");
+                                int i = Integer.parseInt(lls.get(1).get(0))+1;
+
+                                sqlDriver.update("insert into Teachers values (" + i + ",\"" + w.getName() + "\","  +
+                                        "\"" + w.getPosition()+"\","  + "\"" + w.getCafedra()+"\"" + ");");
+                                vc.update();
+                            }
+                        });
+                        UI.getCurrent().addWindow(subWindowUI);
+                    }
+                });
+
+            }) ;
+            tableLectires.setStyleName(ValoTheme.BUTTON_TINY);
+
+            Button tableSubjects = new Button("Предметы", (cl)->{
+                vc.renderFullTable("Subjects", new Consumer<Void>() {
+                    @Override
+                    public void accept(Void aVoid) {
+                        SubjectInputWindow subWindowUI = new SubjectInputWindow(new Consumer<SubjectInputWindow>() {
+                            @Override
+                            public void accept(SubjectInputWindow w) {
+                                List<List<String>> lls=sqlDriver.query("select max(id) from Subjects");
+                                int i = Integer.parseInt(lls.get(1).get(0))+1;
+
+                                sqlDriver.update("insert into Subjects values (" + i + ",\"" + w.getName() + "\","  +
+                                       w.getZe()+","+w.getNagr()+ ");");
+                                vc.update();
+                            }
+                        });
+                        UI.getCurrent().addWindow(subWindowUI);
+                    }
+                });
+
+            }) ;
+            tableSubjects.setStyleName(ValoTheme.BUTTON_TINY);
+
+
+            Button tableMarks = new Button("Успеваемость", (cl)->{
+                vc.renderFullTable("Marks", aVoid -> {
+                    MarksInputWindow subWindowUI = new MarksInputWindow(w -> {
+                        sqlDriver.update("insert into Marks values (" +
+                                w.getSub_id() + "," + w.getSt_id() + "," + w.getLec_Id() + "," + w.getMark() + ",\"" + w.getExamDate() + "\"" +
+                                ");");
+                        vc.update();
+                    });
+                    UI.getCurrent().addWindow(subWindowUI);
+                }, ls -> {
+                    System.out.println("delete from "+ "Marks"+" where SUB_ID = "+ls.get(0) +" and ST_ID = "+ls.get(1));
+                    sqlDriver.update("delete from "+ "Marks"+" where SUB_ID = "+ls.get(0) +" and ST_ID = "+ls.get(1));
+                });
+            }) ;
+            tableMarks.setStyleName(ValoTheme.BUTTON_TINY);
+
+            addComponents(tablePerson,tableStudents,tableLectires,tableSubjects,tableMarks);
         }};
 
         VerticalLayout queryLayout = new VerticalLayout(){{
@@ -103,10 +166,14 @@ public class MyUI extends UI {
 
 class ViewQuery extends VerticalLayout{
     private final SQLDriver sqlDriver=new SQLDriver();
-    Consumer<Void> consumer;
+    private Consumer<Void> addButtonListener;
+    private Consumer<Void> deleteButtonListener=null;
     private String table;
+    public void overrideSimpleDelete(Consumer <Void> consumer){
+        deleteButtonListener=consumer;
+    }
     public void update(){
-        renderFullTable(table,consumer);
+        renderFullTable(table, addButtonListener);
     }
     ViewQuery(){
         setMargin(false);
@@ -127,8 +194,11 @@ class ViewQuery extends VerticalLayout{
         }});
     }
     public void renderFullTable(String table, Consumer<Void> addButtonListener){
+        renderFullTable(table,addButtonListener,null);
+    }
+    public void renderFullTable(String table, Consumer<Void> addButtonListener,  Consumer<List<String>> deleteButtonListener){
         this.table = table;
-        this.consumer=addButtonListener;
+        this.addButtonListener =addButtonListener;
         String query="select * from "+table;
         List<List<String>> lls=sqlDriver.query(query);
         removeAllComponents();
@@ -148,7 +218,11 @@ class ViewQuery extends VerticalLayout{
 
             addColumn(ls->{
                 Button delete =  new Button("удалить "+ls.get(0), e->{
-                    sqlDriver.update("delete from "+ table+" where id = "+ls.get(0));
+                    if (deleteButtonListener==null){
+                        sqlDriver.update("delete from "+ table+" where id = "+ls.get(0));
+                    } else {
+                        deleteButtonListener.accept(ls);
+                    }
                     renderFullTable(table, addButtonListener);
                 });
                 delete.setStyleName(ValoTheme.BUTTON_TINY);
