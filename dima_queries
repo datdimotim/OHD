@@ -1,0 +1,74 @@
+0.
+	create table if not exists Clients (  PASSPORT INT, Name VARCHAR(255), age int, acc_count int,expir_year int,pol  VARCHAR(10), PRIMARY KEY(PASSPORT));
+	create table if not exists Cars (  LIC_NUM INT, Name VARCHAR(255), age int, acc_count int, PRIMARY KEY(LIC_NUM));
+ 	create table if not exists Mechanics (  PASSPORT INT, Name VARCHAR(255),salary int,expir_year int, age int, pol  VARCHAR(10),  PRIMARY KEY(PASSPORT));
+	 create table if not exists JOBS (  LIC_NUM INT,  acc_date VARCHAR(255), CL_PASSPORT INT,MEC_PASSPORT INT, time INt, cost int, PRIMARY KEY(LIC_NUM, acc_date));
+
+
+1.	
+	Работник мужчина с самой высокой зарплатой	
+ 	select name from Mechanics where (age = (select max(age) from Mechanics where pol="m"));
+
+2.   
+	Имена работников, которые отвечали за ремонт стоимостью более 15000
+	select distinct Mechanics.Name from Teachers inner join JOBS on MEC_PASSPORT=MEC_PASSPORT where cost>15000;
+
+3.
+	Во сколько владельцы Мазды потратили в среднем больше, чем дугие владельцы
+	select avg(cost/(select avg(cost) from  Marks inner join Cars on Cars.LIC_NUM=JOBS.LIC_NUM where Cars.Name="Mazda")) from JOBS inner join Cars  on Cars.LIC_NUM=JOBS.LIC_NUM;
+
+
+4.    
+	 Средние стоимости ремонта маркам автомобиля
+	 select distinct Cars.Name, avg(cost) from  JOBS inner join Cars on JOBS.LIC_NUM=Cars.LIC_NUM group by(Cars.Names);
+
+5. 	
+	Список механиков, которые не отвечали ни за один ремонт, дороже 15000
+	 select distinct Mechanics.Name from Mechanics inner join JOBS on PASSPORT=JOBS.MEC_PASSPORT where (MEC_PASSPORT not in (select Mechanics.PASSPORT from Mechanics inner join JOBS on 
+Mechanics.PASSPORT=MEC_PASSPORT where cost>=15000) );
+
+
+6. 
+	Клиенты, кторые сдавали автомобиль до указанной даты
+	select distinct Clients.name from Clients inner join JOBS on Clients.PASSPORT=CL_PASSPORT where JOBS.acc_date <= "2019-04-17";
+
+
+7. 
+	 
+	Средние стоимости ремонта по полу
+	select distinct pol, avg(cost) from Clients inner join JOBS on PASSPORT=CL_PASSPORT inner join Clients on Clients.PASSPORT=CL_PASSPORT group by(pol);
+
+8.	
+
+	Машины, которые ремонтировали женщины
+	select distinct Cars.Name from Cars inner join JOBS on LIC_NUM= Cars.LIC_NUM inner join Mechanics on Mechanics.PASSPORT = MEC_PASSPORT where Mechanics.pol = "w";
+
+9. 
+	Клиент с самым большим стажем 
+	select name from Clients where (expir_year = (select max(expir_year) from Clients));
+
+10.
+	Средние затраты водителей в порядке убывания
+ 	select Clients.Name, avg(cost) from Clients inner join Marks on PASSPORT=CL_PASSPORT group by (Clients.PASSPORT) Order by avg(cost) DESC;
+
+11. 
+	Механики, которые еще не отвечали за ремонт
+	select Mechanics.Name from Mechanics left join JOBS on PASSPORT=MEC_PASSPORT where LIC_NUM is null;   ? - возможно испровить isNull поле
+
+
+12. 
+	Количество механиков младше 25 лет, которые отвечали за ремонт
+	select count(PASSPORT) from (select distinct Mechanics.PASSPORT from Mechanics inner join JOBS on PASSPORT=MEC_PASSPORT where Mechanics.age < 21) as tabs;
+
+13. 	
+	Список механиков женщин
+	select Mechanics.name from Mechanics where Mechanics.pol ="w";
+
+14.
+	Список клиентов, которые суммарно потратили больше 150000 
+	select distinct Clients.Name from Clients inner join JOBS on PASSPORT=CL_PASSPORT group by (Clients.PASSPORT) having (sum(cost)>=150000);
+
+15.
+	Список водителей младше 30 лет и у которых обращений больше 10
+	 select Clients.Name from Clients where Clients.Age > 30 and Clients.acc_count > 10;
+

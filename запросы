@@ -1,0 +1,6 @@
+create table if not exists Persons (  ID INT, NameNum VARCHAR(255), AgeNum int,  PRIMARY KEY(ID));
+create table if not exists Students (  ID INT, NameNum VARCHAR(255),Department VARCHAR(255),  AgeNum int, City VARCHAR(255),  PRIMARY KEY(ID));
+ create table if not exists Teachers (  ID INT, NameNum VARCHAR(255),position VARCHAR(255), cafedra  VARCHAR(255),  PRIMARY KEY(ID));
+create table if not exists Subjects (  ID INT, NameNum VARCHAR(255), ze int, nagr int, PRIMARY KEY(ID));
+ create table if not exists Marks (  SUB_ID INT,  ST_ID INT, T_ID INT, mark INt, exam_date VARCHAR(255), PRIMARY KEY(SUB_ID, ST_ID));
+
