@@ -70,5 +70,5 @@ Mechanics.PASSPORT=MEC_PASSPORT where cost>=15000) );
 
 15.
 	Список водителей младше 30 лет и у которых обращений больше 10
-	 select Clients.Name from Clients where Clients.Age > 30 and Clients.acc_count > 10;
+	 select Clients.Name from Clients where Clients.Age < 30 and Clients.acc_count > 10;
 
