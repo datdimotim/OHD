@@ -172,7 +172,7 @@ public class MyUI extends UI {
                 makeQuery.setVisible(false);
 
                 infoLabel.setValue("Самый старший студент ФКТИ");
-                vc.render("select nameNum from Students where (ageNum = (select max(ageNum) from Students where Department=\"FKTI\"))");
+                vc.render("select nameNum from Students where (ageNum = (select max(ageNum) from Students where Department=\"FKTI\" || Department=\"ФКТИ\"))");
             });
             query1.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query1);
@@ -192,7 +192,7 @@ public class MyUI extends UI {
                 makeQuery.setVisible(false);
 
                 infoLabel.setValue("Отличие среднего балла студента ФКТИ от среднего по всем факультетам");
-                vc.render("select avg(mark/(select avg(mark)  from Teachers inner join Marks on Teachers.ID=T_ID inner join Students on Students.id=st_id where department=\"FKTI\"))  from Teachers inner join Marks on Teachers.ID=T_ID inner join Students on Students.id=st_id;\n");
+                vc.render("select avg(mark/(select avg(mark)  from Teachers inner join Marks on Teachers.ID=T_ID inner join Students on Students.id=st_id where department=\"FKTI\" || department=\"ФКТИ\"))  from Teachers inner join Marks on Teachers.ID=T_ID inner join Students on Students.id=st_id;\n");
             });
             query3.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query3);
@@ -242,7 +242,7 @@ public class MyUI extends UI {
                 makeQuery.setVisible(false);
 
                 infoLabel.setValue("Предметы, которые сдают на ФКТИ");
-                vc.render("select distinct Subjects.NameNum  from Subjects inner join Marks on id= st_id inner join Students on Students.id = st_id where Students.Department = \"FKTI\";");
+                vc.render("select distinct Subjects.NameNum  from Subjects inner join Marks on id= st_id inner join Students on Students.id = st_id where Students.Department = \"ФКТИ\";");
             });
             query8.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query8);
@@ -282,7 +282,7 @@ public class MyUI extends UI {
                 makeQuery.setVisible(false);
 
                 infoLabel.setValue("Количество профессоров, которые принимали экзамены");
-                vc.render("select count(id) from (select distinct Teachers.id  from  Teachers inner join Marks on id=t_id where position = \"professor\") as ids;");
+                vc.render("select count(id) from (select distinct Teachers.id  from  Teachers inner join Marks on id=t_id where position = \"профессор\") as ids;");
             });
             query12.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query12);
@@ -293,7 +293,7 @@ public class MyUI extends UI {
                 makeQuery.setVisible(false);
 
                 infoLabel.setValue("Список доцентов");
-                vc.render("select  Teachers.nameNum  from  Teachers where Teachers.position = \"docent\";");
+                vc.render("select  Teachers.nameNum  from  Teachers where Teachers.position = \"доцент\";");
             });
             query13.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query13);
@@ -313,7 +313,7 @@ public class MyUI extends UI {
                 makeQuery.setVisible(false);
 
                 infoLabel.setValue("Список студентов из Спб старше 21 года");
-                vc.render("select Students.NameNum from Students where Students.AgeNum > 21 and Students.City = \"Spb\";");
+                vc.render("select Students.NameNum from Students where Students.AgeNum > 21 and Students.City = \"Спб\";");
             });
             query15.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query15);
@@ -348,11 +348,8 @@ public class MyUI extends UI {
 class ViewQuery extends VerticalLayout{
     private final SQLDriver sqlDriver=new SQLDriver();
     private Consumer<Void> addButtonListener;
-    private Consumer<Void> deleteButtonListener=null;
+    private Consumer<List<String>> deleteButtonListener=null;
     private String table;
-    public void overrideSimpleDelete(Consumer <Void> consumer){
-        deleteButtonListener=consumer;
-    }
     public void update(){
         renderFullTable(table, addButtonListener);
     }
@@ -363,7 +360,7 @@ class ViewQuery extends VerticalLayout{
 
         List<List<String>> lls=sqlDriver.query(query);
         removeAllComponents();
-        addComponent(new Label("Текущий запрос: "+query));
+        addComponent(new Label("Запрос: "+query));
         addComponent(new Grid<List<String>>(){{
             setSizeFull();
             setItems(lls.subList(1,lls.size()));
@@ -380,14 +377,16 @@ class ViewQuery extends VerticalLayout{
     public void renderFullTable(String table, Consumer<Void> addButtonListener,  Consumer<List<String>> deleteButtonListener){
         this.table = table;
         this.addButtonListener =addButtonListener;
+        this.deleteButtonListener = deleteButtonListener;
         String query="select * from "+table;
+
         List<List<String>> lls=sqlDriver.query(query);
         removeAllComponents();
 
         Button addButton = new Button("Добавить",(cl)-> addButtonListener.accept(null));
         addButton.setStyleName(ValoTheme.BUTTON_TINY);
         addComponent(addButton);
-        addComponent(new Label("Текущий запрос: "+query));
+        addComponent(new Label("Запрос: "+query));
         addComponent(new Grid<List<String>>(){{
             setSizeFull();
             setItems(lls.subList(1,lls.size()));
@@ -398,13 +397,13 @@ class ViewQuery extends VerticalLayout{
             }
 
             addColumn(ls->{
-                Button delete =  new Button("удалить "+ls.get(0), e->{
+                Button delete =  new Button("удалить", e->{
                     if (deleteButtonListener==null){
                         sqlDriver.update("delete from "+ table+" where id = "+ls.get(0));
                     } else {
                         deleteButtonListener.accept(ls);
                     }
-                    renderFullTable(table, addButtonListener);
+                    renderFullTable(table, addButtonListener,deleteButtonListener);
                 });
                 delete.setStyleName(ValoTheme.BUTTON_TINY);
                 return delete;
