@@ -69,75 +69,86 @@ public class MyUI extends UI {
                 });
 
                 tablePerson.setStyleName(ValoTheme.BUTTON_TINY);
-                Button tableStudents = new Button("Студенты", (cl)->{
+                Button tableStudents = new Button("Клиенты", (cl)->{
                     dateField.setVisible(false);
                     makeQuery.setVisible(false);
 
-                    vc.renderFullTable("Students", new Consumer<Void>() {
+                    vc.renderFullTable("Clients", new Consumer<Void>() {
                         @Override
                         public void accept(Void aVoid) {
                             InputStudentWindow subWindowUI = new InputStudentWindow(new Consumer<InputStudentWindow>() {
                                 @Override
                                 public void accept(InputStudentWindow w) {
-                                    List<List<String>> lls=sqlDriver.query("select max(id) from Students");
-                                    int i = Integer.parseInt(lls.get(1).get(0))+1;
 
-                                    sqlDriver.update("insert into Students values (" + i + ",\"" + w.getName() + "\","  +
-                                            "\"" + w.getDepartment()+"\"," + w.getAge()+  ",\"" + w.getCity()+"\"" + ");");
+                                    sqlDriver.update("insert into Clients values (\"" + w.getPassport() + "\"" + "," + "\"" + w.getName() + "\"," +
+                                            w.getAge() + "," + w.getAccidents() + "," + w.getExpir() + ",\"" + w.getPol() + "\"" + ")");
                                     vc.update();
                                 }
                             });
                             UI.getCurrent().addWindow(subWindowUI);
+                        }
+                    }, new Consumer<List<String>>() {
+                        @Override
+                        public void accept(List<String> ls) {
+                            sqlDriver.update("delete from "+ "Clients "+" where passport = \""+ls.get(0)+"\"");
                         }
                     });
 
                 }) ;
                 tableStudents.setStyleName(ValoTheme.BUTTON_TINY);
 
-            Button tableLectires = new Button("Преподаватели", (cl)->{
+            Button tableLectires = new Button("Механики", (cl)->{
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                vc.renderFullTable("Teachers", new Consumer<Void>() {
+                vc.renderFullTable("Mechanics", new Consumer<Void>() {
                     @Override
                     public void accept(Void aVoid) {
                         LecturesInputWindow subWindowUI = new LecturesInputWindow(new Consumer<LecturesInputWindow>() {
                             @Override
                             public void accept(LecturesInputWindow w) {
-                                List<List<String>> lls=sqlDriver.query("select max(id) from Teachers");
-                                int i = Integer.parseInt(lls.get(1).get(0))+1;
-
-                                sqlDriver.update("insert into Teachers values (" + i + ",\"" + w.getName() + "\","  +
-                                        "\"" + w.getPosition()+"\","  + "\"" + w.getCafedra()+"\"" + ");");
+                                System.out.println("insert into Mechanics values (\"" + w.getPassport() + "\",\"" + w.getName() + "\","  +
+                                        w.getSalary() +","+w.getExpir()+","+w.getAge() + ",\"" + w.getPol()+"\"" + ");");
+                                sqlDriver.update("insert into Mechanics values (\"" + w.getPassport() + "\",\"" + w.getName() + "\","  +
+                                        w.getSalary() +","+w.getExpir()+","+w.getAge() + ",\"" + w.getPol()+"\"" + ");");
                                 vc.update();
                             }
                         });
                         UI.getCurrent().addWindow(subWindowUI);
+                    }
+                },new Consumer<List<String>>() {
+                    @Override
+                    public void accept(List<String> ls) {
+                        sqlDriver.update("delete from "+ "Mechanics "+" where passport = \""+ls.get(0)+"\"");
                     }
                 });
 
             }) ;
             tableLectires.setStyleName(ValoTheme.BUTTON_TINY);
 
-            Button tableSubjects = new Button("Предметы", (cl)->{
+            Button tableSubjects = new Button("Автомобили", (cl)->{
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                vc.renderFullTable("Subjects", new Consumer<Void>() {
+                vc.renderFullTable("Cars", new Consumer<Void>() {
                     @Override
                     public void accept(Void aVoid) {
                         SubjectInputWindow subWindowUI = new SubjectInputWindow(new Consumer<SubjectInputWindow>() {
                             @Override
                             public void accept(SubjectInputWindow w) {
-                                List<List<String>> lls=sqlDriver.query("select max(id) from Subjects");
-                                int i = Integer.parseInt(lls.get(1).get(0))+1;
 
-                                sqlDriver.update("insert into Subjects values (" + i + ",\"" + w.getName() + "\","  +
-                                       w.getZe()+","+w.getNagr()+ ");");
+
+                                sqlDriver.update("insert into Cars values (\"" + w.getPassport() + "\",\"" + w.getName() + "\","  +
+                                       w.getAge()+","+w.getAccidents()+ ");");
                                 vc.update();
                             }
                         });
                         UI.getCurrent().addWindow(subWindowUI);
+                    }
+                },new Consumer<List<String>>() {
+                    @Override
+                    public void accept(List<String> ls) {
+                        sqlDriver.update("delete from "+ "Cars "+" where LIC_NUM = \""+ls.get(0)+"\"");
                     }
                 });
 
@@ -145,20 +156,20 @@ public class MyUI extends UI {
             tableSubjects.setStyleName(ValoTheme.BUTTON_TINY);
 
 
-            Button tableMarks = new Button("Успеваемость", (cl)->{
+            Button tableMarks = new Button("Ремонт", (cl)->{
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                vc.renderFullTable("Marks", aVoid -> {
+                vc.renderFullTable("JOBS", aVoid -> {
                     MarksInputWindow subWindowUI = new MarksInputWindow(w -> {
-                        sqlDriver.update("insert into Marks values (" +
-                                w.getSub_id() + "," + w.getSt_id() + "," + w.getLec_Id() + "," + w.getMark() + ",\"" + w.getExamDate() + "\"" +
+                        sqlDriver.update("insert into JOBS values (\"" +
+                                w.getCar_id() + "\",\"" + w.getVisitDate() + "\",\"" + w.getClient_Id() + "\",\"" + w.getMec_id() + "\"," + w.getTime()+","+w.getCost()  +
                                 ");");
                         vc.update();
                     });
                     UI.getCurrent().addWindow(subWindowUI);
                 }, ls -> {
-                    sqlDriver.update("delete from "+ "Marks"+" where SUB_ID = "+ls.get(0) +" and ST_ID = "+ls.get(1));
+                    sqlDriver.update("delete from "+ "JOBS"+" where LIC_NUM = \""+ls.get(0)+"\"" +" and acc_date = \""+ls.get(1)+"\"");
                 });
             }) ;
             tableMarks.setStyleName(ValoTheme.BUTTON_TINY);
@@ -171,8 +182,8 @@ public class MyUI extends UI {
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                infoLabel.setValue("Самый старший студент ФКТИ");
-                vc.render("select nameNum from Students where (ageNum = (select max(ageNum) from Students where Department=\"FKTI\" || Department=\"ФКТИ\"))");
+                infoLabel.setValue("Работник мужчина с самой высокой зарплатой");
+                vc.render("select name from Mechanics where (salary = (select max(salary) from Mechanics where pol=\"М\"));");
             });
             query1.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query1);
@@ -351,7 +362,7 @@ class ViewQuery extends VerticalLayout{
     private Consumer<List<String>> deleteButtonListener=null;
     private String table;
     public void update(){
-        renderFullTable(table, addButtonListener);
+        renderFullTable(table, addButtonListener,deleteButtonListener);
     }
     ViewQuery(){
         setMargin(false);

@@ -1,6 +1,7 @@
 package dbViewer;
 
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -9,16 +10,18 @@ import java.util.function.Consumer;
 
 public class MarksInputWindow extends Window {
     private final VerticalLayout verticalLayout;
-    private final CNumber st_id_TextEdit;
-    private final CNumber sub_id_TextEdit;
-    private final CNumber lec_id_TextEdit;
-    private final CNumber markTextEdit;
+    private final TextField mechanic_id_TextEdit;
+    private final TextField car_id_TextEdit;
+    private final TextField client_id_TextEdit;
+    private final CNumber costTextEdit;
+    private final CNumber lastTextEdit;
     private final DateField dateField;
-    public int getSub_id(){ return sub_id_TextEdit.getIntNumber(); }
-    public int getSt_id(){return st_id_TextEdit.getIntNumber();}
-    public int getLec_Id(){ return lec_id_TextEdit.getIntNumber(); }
-    public String getExamDate(){return dateField.getValue().toString();}
-    public int getMark(){ return markTextEdit.getIntNumber(); }
+    public String getCar_id(){ return car_id_TextEdit.getValue(); }
+    public String getMec_id(){return mechanic_id_TextEdit.getValue();}
+    public String  getClient_Id(){ return client_id_TextEdit.getValue(); }
+    public String getVisitDate(){return dateField.getValue().toString();}
+    public int getCost(){ return costTextEdit.getIntNumber(); }
+    public int getTime(){ return lastTextEdit.getIntNumber(); }
 
     MarksInputWindow(Consumer<MarksInputWindow> onOkListener){
         super("Добавить успеваемость");
@@ -28,17 +31,24 @@ public class MarksInputWindow extends Window {
         verticalLayout = new VerticalLayout();
         setContent(verticalLayout);
 
-        st_id_TextEdit = new CNumber(1,0,Integer.MAX_VALUE-1);
-        sub_id_TextEdit = new CNumber(1,0,Integer.MAX_VALUE-1);
-        lec_id_TextEdit = new CNumber(1,0,Integer.MAX_VALUE-1);
-        markTextEdit = new CNumber(4,2,5);
-        dateField = new DateField("Дата экзамена", LocalDate.now());
+        mechanic_id_TextEdit = new TextField();
+        mechanic_id_TextEdit.setCaption("Паспорт ответственного механика");
+        car_id_TextEdit = new TextField();
+        car_id_TextEdit.setCaption("Номер регистрации автомобиля");
+        client_id_TextEdit = new TextField();
+        client_id_TextEdit.setCaption("Паспорт клиента");
+        costTextEdit = new CNumber(2000,500,5000000);
+        lastTextEdit = new CNumber(7,1,300);
+
+        dateField = new DateField("Дата обращения", LocalDate.now());
         verticalLayout.addComponents(
-                new com.vaadin.ui.Label("Id предмета"), sub_id_TextEdit,
-                new com.vaadin.ui.Label("Id студента"), st_id_TextEdit,
-                new com.vaadin.ui.Label("Id преподавателя"), lec_id_TextEdit,
-                new com.vaadin.ui.Label("Оценка"), markTextEdit,
                 dateField,
+                car_id_TextEdit,
+                mechanic_id_TextEdit,
+                client_id_TextEdit,
+                new com.vaadin.ui.Label("Стомость"), costTextEdit,
+                new com.vaadin.ui.Label("Продолжительность(в днях)"), lastTextEdit,
+
                 new com.vaadin.ui.Button("ok",(cl)->{
                     onOkListener.accept(this);
                     close();

@@ -11,14 +11,16 @@ public class SubjectInputWindow extends Window {
 
     private final VerticalLayout verticalLayout;
     private final TextField nameTextEdit;
-    private final CNumber zeTextEdit;
-    private final CNumber nagrTextEdit;
+    private final CNumber accidsTextEdit;
+    private final CNumber ageTextEdit;
+    private final TextField passport;
 
-    public int getNagr(){ return nagrTextEdit.getIntNumber(); }
-    public int getZe(){
-        return zeTextEdit.getIntNumber();
+
+    public int getAge(){ return ageTextEdit.getIntNumber(); }
+    public int getAccidents(){
+        return accidsTextEdit.getIntNumber();
     }
-
+    public String getPassport(){ return passport.getValue(); }
     public String getName(){
         return nameTextEdit.getValue();
     }
@@ -32,10 +34,11 @@ public class SubjectInputWindow extends Window {
         setContent(verticalLayout);
         nameTextEdit = new com.vaadin.ui.TextField();
         nameTextEdit.setCaption("Название");
-        zeTextEdit = new CNumber(1,0,400);
-        nagrTextEdit = new CNumber(1,0,400);
-
-        verticalLayout.addComponents(nameTextEdit,new Label("Зачетные единицы"), zeTextEdit,new Label("Нагрузка"),nagrTextEdit, new com.vaadin.ui.Button("ok",(cl)->{
+        accidsTextEdit = new CNumber(1,0,400);
+        ageTextEdit = new CNumber(1,0,400);
+        passport = new TextField();
+        passport.setCaption("Номер лицензии");
+        verticalLayout.addComponents(passport,nameTextEdit,new Label("Возраст"), ageTextEdit,new Label("Количество обращений"), accidsTextEdit, new com.vaadin.ui.Button("ok",(cl)->{
             onOkListener.accept(this);
             close();
         }));
