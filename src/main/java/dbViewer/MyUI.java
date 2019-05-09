@@ -321,7 +321,7 @@ public class MyUI extends UI {
         }};
         layout.addComponent(dateField);
         layout.addComponents(vc/*, new Button("click",e->{
-            vc.render(tf.getValue());
+            vc.render(tf.getValue())
         })*/);
         //
         //layout.setWidth("1200px");
