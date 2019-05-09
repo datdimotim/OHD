@@ -192,8 +192,8 @@ public class MyUI extends UI {
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                infoLabel.setValue("Имена преподавателей, которые ставили 5 студентам");
-                vc.render("select distinct Teachers.NameNum from Teachers inner join Marks on ID=T_ID where mark=5;");
+                infoLabel.setValue("Имена работников, которые отвечали за ремонт стоимостью более 15000");
+                vc.render("select distinct Mechanics.Name from Mechanics inner join JOBS on PASSPORT=JOBS.MEC_PASSPORT where cost>15000;");
             });
             query2.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query2);
@@ -202,8 +202,8 @@ public class MyUI extends UI {
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                infoLabel.setValue("Отличие среднего балла студента ФКТИ от среднего по всем факультетам");
-                vc.render("select avg(mark/(select avg(mark)  from Teachers inner join Marks on Teachers.ID=T_ID inner join Students on Students.id=st_id where department=\"FKTI\" || department=\"ФКТИ\"))  from Teachers inner join Marks on Teachers.ID=T_ID inner join Students on Students.id=st_id;\n");
+                infoLabel.setValue("Во сколько владельцы Мазды потратили в среднем больше, чем дугие владельцы");
+                vc.render("select avg(cost/(select avg(cost) from  JOBS inner join Cars on Cars.LIC_NUM=JOBS.LIC_NUM where Cars.Name=\"Mazda\")) from JOBS inner join Cars  on Cars.LIC_NUM=JOBS.LIC_NUM;");
             });
             query3.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query3);
@@ -212,8 +212,8 @@ public class MyUI extends UI {
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                infoLabel.setValue("Средние баллы по факультетам");
-                vc.render("select distinct department, avg(mark)  from Subjects inner join Marks on  ID=SUB_id inner join Students on Students.id=st_id group by(department);");
+                infoLabel.setValue(" Средние стоимости ремонта маркам автомобиля");
+                vc.render("select distinct Cars.Name, avg(cost) from  JOBS inner join Cars on JOBS.LIC_NUM=Cars.LIC_NUM group by(Cars.Name);");
             });
             query4.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query4);
@@ -222,8 +222,9 @@ public class MyUI extends UI {
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                infoLabel.setValue("Преподаватели, которые не поставили ни одной 5");
-                vc.render("select distinct Teachers.NameNum  from Teachers inner join Marks on id=t_id where (t_id not  in  (select Teachers.id from Teachers inner join Marks on ID=T_ID where mark=5) );");
+                infoLabel.setValue("Список механиков, которые не отвечали ни за один ремонт, дороже 15000");
+                vc.render("select distinct Mechanics.Name from Mechanics inner join JOBS on PASSPORT=JOBS.MEC_PASSPORT where (MEC_PASSPORT not in (select Mechanics.PASSPORT from Mechanics inner join JOBS on \n" +
+                        "Mechanics.PASSPORT=MEC_PASSPORT where cost>=15000) );");
             });
             query5.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query5);

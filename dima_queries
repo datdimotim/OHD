@@ -11,16 +11,16 @@
 
 2.   
 	Имена работников, которые отвечали за ремонт стоимостью более 15000
-	select distinct Mechanics.Name from Teachers inner join JOBS on MEC_PASSPORT=MEC_PASSPORT where cost>15000;
+	select distinct Mechanics.Name from Mechanics inner join JOBS on PASSPORT=JOBS.MEC_PASSPORT where cost>15000;
 
 3.
 	Во сколько владельцы Мазды потратили в среднем больше, чем дугие владельцы
-	select avg(cost/(select avg(cost) from  Marks inner join Cars on Cars.LIC_NUM=JOBS.LIC_NUM where Cars.Name="Mazda")) from JOBS inner join Cars  on Cars.LIC_NUM=JOBS.LIC_NUM;
+	select avg(cost/(select avg(cost) from  JOBS inner join Cars on Cars.LIC_NUM=JOBS.LIC_NUM where Cars.Name="Mazda")) from JOBS inner join Cars  on Cars.LIC_NUM=JOBS.LIC_NUM;
 
 
 4.    
 	 Средние стоимости ремонта маркам автомобиля
-	 select distinct Cars.Name, avg(cost) from  JOBS inner join Cars on JOBS.LIC_NUM=Cars.LIC_NUM group by(Cars.Names);
+	 select distinct Cars.Name, avg(cost) from  JOBS inner join Cars on JOBS.LIC_NUM=Cars.LIC_NUM group by(Cars.Name);
 
 5. 	
 	Список механиков, которые не отвечали ни за один ремонт, дороже 15000
