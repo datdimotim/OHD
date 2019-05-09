@@ -351,7 +351,7 @@ class ViewQuery extends VerticalLayout{
     private Consumer<List<String>> deleteButtonListener=null;
     private String table;
     public void update(){
-        renderFullTable(table, addButtonListener);
+        renderFullTable(table, addButtonListener,deleteButtonListener);
     }
     ViewQuery(){
         setMargin(false);
