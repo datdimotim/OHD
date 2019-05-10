@@ -132,7 +132,7 @@ public class MyUI extends UI {
                                 List<List<String>> lls=sqlDriver.query("select max(id) from Subjects");
                                 int i = Integer.parseInt(lls.get(1).get(0))+1;
 
-                                sqlDriver.update("insert into Subjects values (" + i + ",\"" + w.getName() + "\","  +
+                                sqlDriver.update("insert into Subjects values (" + 1 + ",\"" + w.getName() + "\","  +
                                        w.getZe()+","+w.getNagr()+ ");");
                                 vc.update();
                             }
