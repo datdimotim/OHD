@@ -81,7 +81,7 @@ public class MyUI extends UI {
                                 public void accept(InputStudentWindow w) {
 
                                     sqlDriver.update("insert into Clients values (\"" + w.getPassport() + "\"" + "," + "\"" + w.getName() + "\"," +
-                                            w.getAge() + "," + w.getAccidents() + "," + w.getExpir() + ",\"" + w.getPol() + "\"" + ")");
+                                            w.getAge() +"," + w.getExpir() + ",\"" + w.getPol() + "\"" + ")");
                                     vc.update();
                                 }
                             });
@@ -139,7 +139,7 @@ public class MyUI extends UI {
 
 
                                 sqlDriver.update("insert into Cars values (\"" + w.getPassport() + "\",\"" + w.getName() + "\","  +
-                                       w.getAge()+","+w.getAccidents()+ ");");
+                                       w.getAge()+ ");");
                                 vc.update();
                             }
                         });
@@ -228,12 +228,11 @@ public class MyUI extends UI {
             });
             query5.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query5);
-
             Button query6 = new Button("query6", cl->{
                 dateField.setVisible(true);
                 makeQuery.setVisible(true);
-
-                infoLabel.setValue("Студенты, которые сдавали экзамен до указанной даты");
+                infoLabel.setValue("Клиенты, кторые сдавали автомобиль до указанной даты");
+                vc.render("select distinct Clients.name from Clients inner join JOBS on Clients.PASSPORT=CL_PASSPORT where JOBS.acc_date <= \""+dateField.getValue()+"\"");
             });
             query6.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query6);
@@ -243,8 +242,8 @@ public class MyUI extends UI {
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                infoLabel.setValue("Средние баллы по городам");
-                vc.render("select distinct city, avg(mark)  from Subjects inner join Marks on  ID=SUB_id inner join Students on Students.id=st_id group by(city);");
+                infoLabel.setValue("Средние стоимости ремонта по полу");
+                vc.render("select distinct pol, avg(cost) from Clients inner join JOBS on PASSPORT=CL_PASSPORT group by(pol);");
             });
             query7.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query7);
@@ -253,8 +252,8 @@ public class MyUI extends UI {
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                infoLabel.setValue("Предметы, которые сдают на ФКТИ");
-                vc.render("select distinct Subjects.NameNum  from Subjects inner join Marks on id= st_id inner join Students on Students.id = st_id where Students.Department = \"ФКТИ\";");
+                infoLabel.setValue("Машины, которые ремонтировали женщины");
+                vc.render("select distinct Cars.Name from Cars inner join JOBS on Cars.LIC_NUM= JOBS.LIC_NUM inner join Mechanics on Mechanics.PASSPORT = MEC_PASSPORT where Mechanics.pol = \"ж\";;");
             });
             query8.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query8);
@@ -263,8 +262,8 @@ public class MyUI extends UI {
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                infoLabel.setValue("Предмет с самой большой нагруженностью");
-                vc.render("select nameNum from Subjects where (nagr = (select max(nagr) from Subjects))");
+                infoLabel.setValue("Клиент с самым большим стажем");
+                vc.render("select name from Clients where (expir_year = (select max(expir_year) from Clients));");
             });
             query9.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query9);
@@ -273,8 +272,8 @@ public class MyUI extends UI {
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                infoLabel.setValue("Средний балл по студентам в порядке убывания");
-                vc.render("select Students.NameNum, avg(mark) from  Students inner join Marks on id=st_id group by (Students.Id) Order by avg(mark) DESC;");
+                infoLabel.setValue("Средние затраты водителей в порядке убывания");
+                vc.render("select Clients.Name, avg(cost) from Clients inner join JOBS on PASSPORT=CL_PASSPORT group by (Clients.PASSPORT) Order by avg(cost) DESC;");
             });
             query10.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query10);
@@ -283,8 +282,8 @@ public class MyUI extends UI {
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                infoLabel.setValue("Преподаватели, которые не принимали экзамены");
-                vc.render("select Teachers.NameNum  from Teachers left join Marks on id=t_id where sub_id is null;");
+                infoLabel.setValue("Механики, которые еще не отвечали за ремонт");
+                vc.render("select Mechanics.Name from Mechanics left join JOBS on PASSPORT=MEC_PASSPORT where LIC_NUM is null;");
             });
             query11.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query11);
@@ -293,8 +292,8 @@ public class MyUI extends UI {
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                infoLabel.setValue("Количество профессоров, которые принимали экзамены");
-                vc.render("select count(id) from (select distinct Teachers.id  from  Teachers inner join Marks on id=t_id where position = \"профессор\") as ids;");
+                infoLabel.setValue("Количество механиков младше 25 лет, которые отвечали за ремонт");
+                vc.render("select count(PASSPORT) from (select distinct Mechanics.PASSPORT from Mechanics inner join JOBS on PASSPORT=MEC_PASSPORT where Mechanics.age < 21) as tabs;");
             });
             query12.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query12);
@@ -304,8 +303,8 @@ public class MyUI extends UI {
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                infoLabel.setValue("Список доцентов");
-                vc.render("select  Teachers.nameNum  from  Teachers where Teachers.position = \"доцент\";");
+                infoLabel.setValue("Список механиков женщин");
+                vc.render("select Mechanics.name from Mechanics where Mechanics.pol =\"ж\";");
             });
             query13.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query13);
@@ -314,8 +313,8 @@ public class MyUI extends UI {
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                infoLabel.setValue("Список студентов, у которых средний балл не меньше 4.5");
-                vc.render("select distinct Students.NameNum  from  Students inner join Marks on id=st_id group by (Students.id) having (avg(mark)>=4.5);");
+                infoLabel.setValue("Список клиентов, которые суммарно потратили больше 150000 ");
+                vc.render("select distinct Clients.Name from Clients inner join JOBS on PASSPORT=CL_PASSPORT group by (Clients.PASSPORT) having (sum(cost)>=150000);");
             });
             query14.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query14);
@@ -324,8 +323,8 @@ public class MyUI extends UI {
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                infoLabel.setValue("Список студентов из Спб старше 21 года");
-                vc.render("select Students.NameNum from Students where Students.AgeNum > 21 and Students.City = \"Спб\";");
+                infoLabel.setValue("Список водителей младше 30 лет и у которых стаж больше 1 года");
+                vc.render("select Clients.Name from Clients where Clients.Age < 30 and Clients.expir_year > 1;");
             });
             query15.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query15);

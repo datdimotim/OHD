@@ -57,7 +57,7 @@ Mechanics.PASSPORT=MEC_PASSPORT where cost>=15000) );
 
 
 12. 
-	Количество механиков младше 25 лет, которые отвечали за ремонт
+	Количество механиков младше 21 лет, которые отвечали за ремонт
 	select count(PASSPORT) from (select distinct Mechanics.PASSPORT from Mechanics inner join JOBS on PASSPORT=MEC_PASSPORT where Mechanics.age < 21) as tabs;
 
 13. 	

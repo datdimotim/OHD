@@ -43,7 +43,7 @@ public class InputStudentWindow extends Window {
         pol = new ComboBox("Пол");
         pol.setItems(Arrays.asList("Ж","М"));
         verticalLayout.addComponents(passport,nameTextEdit,new Label("Возраст"),ageTextEdit,
-                new Label("Количество обращений"),acc_countTextEdit,new Label("Опыт вождения"),expirTextEdit,pol, new Button("ok",(cl)->{
+                new Label("Количество обращений"),new Label("Опыт вождения"),expirTextEdit,pol, new Button("ok",(cl)->{
             onOkListener.accept(this);
             close();
         }));
