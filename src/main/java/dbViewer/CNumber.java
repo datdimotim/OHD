@@ -11,7 +11,7 @@ public class CNumber extends CssLayout {
     @Setter
     private final TextField textField;
     private final int labelWidth=6;
-    private final int labelOffset=20;
+    private final int labelOffset=25;
     private Binder<TextForValidate> binder = new Binder<>();
 
 

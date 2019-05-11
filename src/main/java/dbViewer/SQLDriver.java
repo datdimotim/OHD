@@ -12,10 +12,10 @@ import static dbViewer.SQLDriver.dbAddr;
 import static dbViewer.SQLDriver.*;
 
 public class SQLDriver {
-    public static final String dbAddr="localhost:3306";
+    public static final String dbAddr="192.168.1.71:3306";
     public static final String dbName="testdb";
-    public static final String username="usr";
-    public static final String password="pwd";
+    public static final String username="user";
+    public static final String password="password";
 
     public SQLDriver() {
         try {

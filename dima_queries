@@ -1,5 +1,5 @@
 0.
-	create table if not exists Clients (  PASSPORT VARCHAR(255), Name VARCHAR(255), age int, acc_count int,expir_year int,pol  VARCHAR(10), PRIMARY KEY(PASSPORT));
+	create table if not exists Clients (  PASSPORT VARCHAR(255), Name VARCHAR(255), age int, expir_year int,pol  VARCHAR(10), PRIMARY KEY(PASSPORT));
 	create table if not exists Cars (  LIC_NUM VARCHAR(255), Name VARCHAR(255), age int, acc_count int, PRIMARY KEY(LIC_NUM));
  	create table if not exists Mechanics (  PASSPORT VARCHAR(255), Name VARCHAR(255),salary int,expir_year int, age int, pol  VARCHAR(10),  PRIMARY KEY(PASSPORT));
 	create table if not exists JOBS (  LIC_NUM VARCHAR(255),  acc_date VARCHAR(255), CL_PASSPORT VARCHAR(255),MEC_PASSPORT VARCHAR(255), time INt, cost int, PRIMARY KEY(LIC_NUM, acc_date));

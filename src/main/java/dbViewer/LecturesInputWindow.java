@@ -41,7 +41,7 @@ public class LecturesInputWindow extends Window {
         nameTextEdit.setCaption("ФИО");
         ageTextEdit = new CNumber(1,0,400);
         expirTextEdit = new CNumber(1,0,400);
-        salaryTextEdit = new CNumber(20000,10000,400000);
+        salaryTextEdit = new CNumber(20000,0,400000);
         pol = new ComboBox("Пол");
         pol.setItems(Arrays.asList("Ж","М"));
         verticalLayout.addComponents(passport,nameTextEdit,new Label("Возраст") ,ageTextEdit,

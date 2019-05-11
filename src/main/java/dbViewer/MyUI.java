@@ -35,7 +35,7 @@ public class MyUI extends UI {
         layout.addComponent(infoLabel);
         ViewQuery vc=new ViewQuery();
         final Button makeQuery = new Button("Запрос", c->{
-            vc.render("select distinct Students.nameNUm from  Students inner join Marks on Students.id=st_id where Marks.exam_date <= \""+dateField.getValue().toString()+"\";");
+            vc.render("select distinct Clients.name,Clients.PASSPORT from Clients inner join JOBS on Clients.PASSPORT=CL_PASSPORT where JOBS.acc_date <= \""+dateField.getValue().toString()+"\";");
         });
         makeQuery.setVisible(false);
         makeQuery.setStyleName(ValoTheme.BUTTON_TINY);
@@ -203,7 +203,7 @@ public class MyUI extends UI {
                 makeQuery.setVisible(false);
 
                 infoLabel.setValue("Во сколько владельцы Мазды потратили в среднем больше, чем дугие владельцы");
-                vc.render("select avg(cost/(select avg(cost) from  JOBS inner join Cars on Cars.LIC_NUM=JOBS.LIC_NUM where Cars.Name=\"Mazda\")) from JOBS inner join Cars  on Cars.LIC_NUM=JOBS.LIC_NUM;");
+                vc.render("select avg(cost/(select avg(cost) from  JOBS inner join Cars on Cars.LIC_NUM=JOBS.LIC_NUM where Cars.Name=\"Mazda\")) from JOBS inner join Cars  on Cars.LIC_NUM=JOBS.LIC_NUM where  Cars.Name<>\"Mazda\";");
             });
             query3.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query3);
@@ -253,7 +253,7 @@ public class MyUI extends UI {
                 makeQuery.setVisible(false);
 
                 infoLabel.setValue("Машины, которые ремонтировали женщины");
-                vc.render("select distinct Cars.Name from Cars inner join JOBS on Cars.LIC_NUM= JOBS.LIC_NUM inner join Mechanics on Mechanics.PASSPORT = MEC_PASSPORT where Mechanics.pol = \"ж\";;");
+                vc.render("select distinct Cars.Name,Cars.LIC_NUM from Cars inner join JOBS on Cars.LIC_NUM= JOBS.LIC_NUM inner join Mechanics on Mechanics.PASSPORT = MEC_PASSPORT where Mechanics.pol = \"ж\";;");
             });
             query8.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query8);
@@ -313,8 +313,8 @@ public class MyUI extends UI {
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                infoLabel.setValue("Список клиентов, которые суммарно потратили больше 150000 ");
-                vc.render("select distinct Clients.Name from Clients inner join JOBS on PASSPORT=CL_PASSPORT group by (Clients.PASSPORT) having (sum(cost)>=150000);");
+                infoLabel.setValue("Список клиентов, которые суммарно потратили больше 15000");
+                vc.render("select distinct Clients.Name from Clients inner join JOBS on PASSPORT=CL_PASSPORT group by (Clients.PASSPORT) having (sum(cost)>=15000);");
             });
             query14.setStyleName(ValoTheme.BUTTON_TINY);
             addComponents(query14);

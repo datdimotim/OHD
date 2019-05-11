@@ -38,7 +38,7 @@ public class SubjectInputWindow extends Window {
         ageTextEdit = new CNumber(1,0,400);
         passport = new TextField();
         passport.setCaption("Номер лицензии");
-        verticalLayout.addComponents(passport,nameTextEdit,new Label("Возраст"), ageTextEdit,new Label("Количество обращений"), accidsTextEdit, new com.vaadin.ui.Button("ok",(cl)->{
+        verticalLayout.addComponents(passport,nameTextEdit,new Label("Возраст"), ageTextEdit, new com.vaadin.ui.Button("ok",(cl)->{
             onOkListener.accept(this);
             close();
         }));
