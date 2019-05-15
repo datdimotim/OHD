@@ -8,7 +8,7 @@ import com.vaadin.ui.Window;
 import java.time.LocalDate;
 import java.util.function.Consumer;
 
-public class MarksInputWindow extends Window {
+public class AddServiceWindow extends Window {
     private final VerticalLayout verticalLayout;
     private final TextField mechanic_id_TextEdit;
     private final TextField car_id_TextEdit;
@@ -23,8 +23,8 @@ public class MarksInputWindow extends Window {
     public int getCost(){ return costTextEdit.getIntNumber(); }
     public int getTime(){ return lastTextEdit.getIntNumber(); }
 
-    MarksInputWindow(Consumer<MarksInputWindow> onOkListener){
-        super("Добавить успеваемость");
+    AddServiceWindow(Consumer<AddServiceWindow> onOkListener){
+        super("Добавить услугу");
         center();
         setClosable(true);
         setModal(true);

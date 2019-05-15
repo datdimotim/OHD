@@ -2,11 +2,10 @@ package dbViewer;
 
 import com.vaadin.ui.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-public class InputStudentWindow extends Window {
+public class AddClientWindow extends Window {
     private final VerticalLayout verticalLayout;
     private final TextField nameTextEdit;
     private final TextField passport;
@@ -26,7 +25,7 @@ public class InputStudentWindow extends Window {
     public String getPol(){return pol.getValue().toString();}
     public String getName(){ return nameTextEdit.getValue();}
     public String getPassport(){ return passport.getValue(); }
-    InputStudentWindow(Consumer<InputStudentWindow> onOkListener){
+    AddClientWindow(Consumer<AddClientWindow> onOkListener){
         super("Добавить клиента");
         center();
         setClosable(true);

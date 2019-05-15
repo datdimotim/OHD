@@ -5,7 +5,7 @@ import com.vaadin.ui.*;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-public class LecturesInputWindow extends Window {
+public class AddMechanicsWindow extends Window {
     private final VerticalLayout verticalLayout;
     private final TextField nameTextEdit;
     private final TextField passport;
@@ -28,7 +28,7 @@ public class LecturesInputWindow extends Window {
 
     public String getName(){ return nameTextEdit.getValue(); }
 
-    LecturesInputWindow(Consumer<LecturesInputWindow> onOkListener){
+    AddMechanicsWindow(Consumer<AddMechanicsWindow> onOkListener){
         super("Добавить механика");
         center();
         setClosable(true);

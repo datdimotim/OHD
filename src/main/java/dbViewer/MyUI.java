@@ -77,9 +77,9 @@ public class MyUI extends UI {
                     vc.renderFullTable("Clients", new Consumer<Void>() {
                         @Override
                         public void accept(Void aVoid) {
-                            InputStudentWindow subWindowUI = new InputStudentWindow(new Consumer<InputStudentWindow>() {
+                            AddClientWindow subWindowUI = new AddClientWindow(new Consumer<AddClientWindow>() {
                                 @Override
-                                public void accept(InputStudentWindow w) {
+                                public void accept(AddClientWindow w) {
 
                                     sqlDriver.update("insert into Clients values (\"" + w.getPassport() + "\"" + "," + "\"" + w.getName() + "\"," +
                                             w.getAge() +"," + w.getExpir() + ",\"" + w.getPol() + "\"" + ")");
@@ -106,9 +106,9 @@ public class MyUI extends UI {
                 vc.renderFullTable("Mechanics", new Consumer<Void>() {
                     @Override
                     public void accept(Void aVoid) {
-                        LecturesInputWindow subWindowUI = new LecturesInputWindow(new Consumer<LecturesInputWindow>() {
+                        AddMechanicsWindow subWindowUI = new AddMechanicsWindow(new Consumer<AddMechanicsWindow>() {
                             @Override
-                            public void accept(LecturesInputWindow w) {
+                            public void accept(AddMechanicsWindow w) {
                                 System.out.println("insert into Mechanics values (\"" + w.getPassport() + "\",\"" + w.getName() + "\","  +
                                         w.getSalary() +","+w.getExpir()+","+w.getAge() + ",\"" + w.getPol()+"\"" + ");");
                                 sqlDriver.update("insert into Mechanics values (\"" + w.getPassport() + "\",\"" + w.getName() + "\","  +
@@ -136,9 +136,9 @@ public class MyUI extends UI {
                 vc.renderFullTable("Cars", new Consumer<Void>() {
                     @Override
                     public void accept(Void aVoid) {
-                        SubjectInputWindow subWindowUI = new SubjectInputWindow(new Consumer<SubjectInputWindow>() {
+                        AddCarWindow subWindowUI = new AddCarWindow(new Consumer<AddCarWindow>() {
                             @Override
-                            public void accept(SubjectInputWindow w) {
+                            public void accept(AddCarWindow w) {
 
 
                                 sqlDriver.update("insert into Cars values (\"" + w.getPassport() + "\",\"" + w.getName() + "\","  +
@@ -165,7 +165,7 @@ public class MyUI extends UI {
                 makeQuery.setVisible(false);
 
                 vc.renderFullTable("JOBS", aVoid -> {
-                    MarksInputWindow subWindowUI = new MarksInputWindow(w -> {
+                    AddServiceWindow subWindowUI = new AddServiceWindow(w -> {
                         sqlDriver.update("insert into JOBS values (\"" +
                                 w.getCar_id() + "\",\"" + w.getVisitDate() + "\",\"" + w.getClient_Id() + "\",\"" + w.getMec_id() + "\"," + w.getTime()+","+w.getCost()  +
                                 ");");

@@ -7,7 +7,7 @@ import com.vaadin.ui.Window;
 
 import java.util.function.Consumer;
 
-public class SubjectInputWindow extends Window {
+public class AddCarWindow extends Window {
 
     private final VerticalLayout verticalLayout;
     private final TextField nameTextEdit;
@@ -25,8 +25,8 @@ public class SubjectInputWindow extends Window {
         return nameTextEdit.getValue();
     }
 
-    SubjectInputWindow(Consumer<SubjectInputWindow> onOkListener){
-        super("Добавить предмет");
+    AddCarWindow(Consumer<AddCarWindow> onOkListener){
+        super("Добавить автомобиль");
         center();
         setClosable(true);
         setModal(true);
