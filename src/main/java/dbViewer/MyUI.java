@@ -6,6 +6,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.themes.ValoTheme;
@@ -31,7 +32,9 @@ public class MyUI extends UI {
         final DateField dateField = new DateField(null,LocalDate.now());
 
         dateField.setVisible(false);
-        Label infoLabel = new Label();
+        Label infoLabel = new Label(){{
+            setContentMode(ContentMode.PREFORMATTED);
+        }};
         layout.addComponent(infoLabel);
         ViewQuery vc=new ViewQuery();
         final Button makeQuery = new Button("Запрос", c->{
@@ -40,9 +43,6 @@ public class MyUI extends UI {
         makeQuery.setVisible(false);
         makeQuery.setStyleName(ValoTheme.BUTTON_TINY);
         layout.addComponent(makeQuery);
-
-
-        TextField tf=new TextField();
 
 
 
@@ -70,6 +70,7 @@ public class MyUI extends UI {
 
                 tablePerson.setStyleName(ValoTheme.BUTTON_TINY);
                 Button tableStudents = new Button("Клиенты", (cl)->{
+                    infoLabel.setValue("");
                     dateField.setVisible(false);
                     makeQuery.setVisible(false);
 
@@ -98,6 +99,7 @@ public class MyUI extends UI {
                 tableStudents.setStyleName(ValoTheme.BUTTON_TINY);
 
             Button tableLectires = new Button("Механики", (cl)->{
+                infoLabel.setValue("");
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
@@ -127,6 +129,7 @@ public class MyUI extends UI {
             tableLectires.setStyleName(ValoTheme.BUTTON_TINY);
 
             Button tableSubjects = new Button("Автомобили", (cl)->{
+                infoLabel.setValue("");
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
@@ -157,6 +160,7 @@ public class MyUI extends UI {
 
 
             Button tableMarks = new Button("Ремонт", (cl)->{
+                infoLabel.setValue("");
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
@@ -202,7 +206,7 @@ public class MyUI extends UI {
                 dateField.setVisible(false);
                 makeQuery.setVisible(false);
 
-                infoLabel.setValue("Во сколько владельцы Мазды потратили в среднем больше, чем дугие владельцы");
+                infoLabel.setValue("Во сколько владельцы Мазды потратили в среднем меньше, чем дугие владельцы");
                 vc.render("select avg(cost/(select avg(cost) from  JOBS inner join Cars on Cars.LIC_NUM=JOBS.LIC_NUM where Cars.Name=\"Mazda\")) from JOBS inner join Cars  on Cars.LIC_NUM=JOBS.LIC_NUM where  Cars.Name<>\"Mazda\";");
             });
             query3.setStyleName(ValoTheme.BUTTON_TINY);
@@ -371,7 +375,10 @@ class ViewQuery extends VerticalLayout{
 
         List<List<String>> lls=sqlDriver.query(query);
         removeAllComponents();
-        addComponent(new Label("Запрос: "+query));
+        addComponent(new TextArea("Запрос", query){{
+            setEnabled(false);
+            setWidth("100%");
+        }});
         addComponent(new Grid<List<String>>(){{
             setSizeFull();
             setItems(lls.subList(1,lls.size()));
@@ -397,7 +404,10 @@ class ViewQuery extends VerticalLayout{
         Button addButton = new Button("Добавить",(cl)-> addButtonListener.accept(null));
         addButton.setStyleName(ValoTheme.BUTTON_TINY);
         addComponent(addButton);
-        addComponent(new Label("Запрос: "+query));
+        addComponent(new TextArea("Запрос",query){{
+            setEnabled(false);
+            setWidth("100%");
+        }});
         addComponent(new Grid<List<String>>(){{
             setSizeFull();
             setItems(lls.subList(1,lls.size()));
